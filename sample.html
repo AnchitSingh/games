@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>BRICK-GAME</title>
+</head>
+<body>
+	<canvas id="game" width="1040" height="700" color="black"></canvas>
+	<script type="text/javascript">
+		    var paddle1X=425;
+		    var ballX=500;
+		    var ballY=350;
+		    var ballspeedX=6;
+		    var ballspeedY=8;
+		    var canvasLenght=150;
+		    var PADDLE_THICKNESS=10;
+		    var PADDLE_Y=40;
+		    var BRICK_WIDTH=80;
+		    var BRICK_HEIGHT=20;
+		    var BRICK_COLS=13;
+		    var BRICK_ROW=14;
+		    var gap=2;
+		    var brickGrid= new Array(BRICK_COLS*BRICK_ROW);
+		    function calculateMousePos(evt){
+			    var rect=canvas.getBoundingClientRect();
+			    var root=document.documentElement;
+			    var mouseX=evt.clientX-rect.left-root.scrollLeft;
+			    var mouseY=evt.clientY-rect.top-root.scrollTop;
+			return{
+				x:mouseX,
+				y:mouseY
+			}
+		}
+		    window.onload=function(){
+			canvas=document.getElementById("game");
+		    canvasContext=canvas.getContext("2d");
+		    var framesPerSecond=70;
+
+			setInterval(function(){
+			moveEverything();
+			drawEverything();
+		  },1000/framesPerSecond);
+			resetBrick();
+		    addEventListener("mousemove",function(evt){
+		    	var mousePos=calculateMousePos(evt);
+		    	paddle1X=mousePos.x-(canvasLenght/2);
+		    });
+		}
+		function moveEverything(){
+			ballX+=ballspeedX;
+			ballY+=ballspeedY;
+			if(ballX<=0)
+			{
+				ballspeedX=-ballspeedX;
+			}
+			if(ballX>=canvas.width)
+			{
+				ballspeedX=-ballspeedX;
+			}
+			if(ballY<=0)
+			{
+				ballspeedY=-ballspeedY;
+			}
+			if(ballY>=canvas.height-(PADDLE_Y+PADDLE_THICKNESS)&&ballX>paddle1X&&ballX<(paddle1X+canvasLenght))
+			{
+				if(ballX>paddle1X&&ballX<(paddle1X+canvasLenght)){
+					ballspeedY=-ballspeedY;
+					var delta=paddle1X+((canvasLenght/2)-ballX)
+					ballspeedX=-delta*0.2;
+				}
+				else if(ballY>=canvas.height&&ballX>paddle1X&&ballX<(paddle1X+canvasLenght)){
+					ballReset();
+				}
+			}
+			else if(ballY>=canvas.height){
+				ballReset();
+			}
+			checkAndRemoveBrick(ballX,ballY)		}
+		function checkAndRemoveBrick(X,Y){
+			var strikeX=Math.floor(X/BRICK_WIDTH);
+			var strikeY=Math.floor(Y/BRICK_HEIGHT);
+			if(strikeX>=BRICK_COLS||strikeY>=BRICK_ROW||strikeX<0||strikeY<0){
+				return false;
+			}
+				var brickIndex=brickTileToIndex(strikeX,strikeY);
+			    if(brickGrid[brickIndex]==1){
+			    	var prevX=ballX-ballspeedX;
+			    	var prevY=ballY-ballspeedY;
+			    	var prevStrikeX=Math.floor(prevX/BRICK_WIDTH);
+			        var prevStrikeY=Math.floor(prevY/BRICK_HEIGHT);
+			        if(prevStrikeX!=strikeX){
+			        	ballspeedX*=-1;
+			       }
+			        if(prevStrikeY!=strikeY){
+			        	ballspeedY*=-1;
+			       }
+			       brickGrid[brickIndex]=0;
+			}
+		}
+		function brickTileToIndex(col,row){
+			return(col+(BRICK_COLS*row));
+		}
+		function resetBrick(){
+			for(var i=0;i<(BRICK_COLS*BRICK_ROW);i++){
+					brickGrid[i]=1;
+			}
+		}
+		function isBrickAtCord(tileCol,tileRow){
+			var brickIndex=tileCol+(BRICK_COLS*tileRow);
+			return(brickGrid[brickIndex]==1);
+		}
+		function makeBricks(){
+			for(var cols=0;cols<BRICK_COLS;cols++)
+			{
+				for(var rows=3;rows<BRICK_ROW;rows++)
+				{
+					if(isBrickAtCord(cols,rows)){
+					var left_edge=cols*BRICK_WIDTH;
+					var top_edge=rows*BRICK_HEIGHT;
+					colorRect(left_edge,top_edge,BRICK_WIDTH-gap,BRICK_HEIGHT-gap,"maroon");
+				  }
+				}
+			}
+		}
+		function ballReset(){
+			ballX=Math.random()*1000;
+			ballY=500;
+			ballspeedX=0;
+			ballspeedY=5;
+		}
+		function colorRect(X,Y,width,height,color)
+		{
+			canvasContext.fillStyle=color;
+		    canvasContext.fillRect(X,Y,width,height);
+		}
+		function makeCircle(X,Y,r,color){
+			canvasContext.fillStyle=color;
+			canvasContext.beginPath();
+			canvasContext.arc(X,Y,r,0,Math.PI*2,true)
+			canvasContext.fill();
+		}
+		function drawEverything(){
+			colorRect(0,0,canvas.width,canvas.height,"orange");
+		    colorRect(paddle1X,canvas.height-(PADDLE_Y+PADDLE_THICKNESS),canvasLenght,PADDLE_THICKNESS,"maroon");
+		    makeCircle(ballX,ballY,10,"yellow");
+		    makeBricks();
+		}
+	</script>
+
+</body>
+</html>

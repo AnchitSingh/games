@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+	<title>Real Calculator</title>
+	<style type="text/css">
+		body
+		{
+			background:linear-gradient(to right,#FF512F,#dd2476);
+			margin: 0px;
+			padding: 0px;
+			font-family: cursive;
+			font-size: 25px;
+			color:gray;
+		}
+		#C-container
+		{
+			margin:0 auto;
+			width: 360px;
+			height:630px;
+			background-color: #A7A8AA;
+			position: relative;
+			top: 20px;
+			left: 0px;
+			border-radius: 20px;
+			
+		}
+		.textview
+		{
+			font-family: cursive;
+			font-size: 50px;
+			font-weight: bold;
+			color:gray;
+			border: none;
+			width: 100%;
+			height: 180px;
+			background-color: #FAFAFA;
+			border-radius: 20px 20px 0px 0px;
+
+		}
+		.button
+		{
+			cursor: pointer;
+			width: 90px;
+			height: 90px;
+			color: white;
+			text-align: center;
+			padding-top: 20px;
+			padding-bottom: 20px;
+			background-color:#1E2326;
+			font-family: cursive;
+			font-size: 25px;
+			margin: 0px;
+			border:none;
+			border-right: 1px solid #FAFAFA; 
+			border-bottom: 1px solid #FAFAFA; 
+			float: left;
+		}
+		#zero
+		{
+			border-radius: 0 0 0 20px;
+			border-bottom: none;
+		}
+		#equal
+		{
+			border-radius: 0 0 20px 0;
+			border-bottom: none;
+			border-right: none;
+			background-color: #FEC208;
+		}
+		.Rbutton
+		{
+			border-right: none;
+			background-color: #5E4BB6;
+		}
+		#del
+		{
+			border-bottom: none;
+		}
+		#dot
+		{
+			border-bottom: none;
+		}
+		#divide
+		{
+			font-size: 35px;
+		}
+		#clear
+		{
+			width: 180px;
+		}
+	</style>
+</head>
+<body>
+	<div id="C-container">
+	    <form name="form">
+		<input class="textview" name="textview">
+		</form>
+		<input type="button" class="button" value="C" id="clear" onclick="erase()">
+		<input type="button" class="button" value="%" onclick="insert('%')">
+		<input type="button" class="button Rbutton" id="divide" value="&#247" onclick="insert('/')">
+		<input type="button" class="button" value="7" onclick="insert(7)">
+		<button class="button" value="8" onclick="insert(8)">8</button>
+		<input type="button" class="button" value="9" onclick="insert(9)">
+		<input type="button" class="button Rbutton" id="multiply" value="*" onclick="insert('*')">
+		<input type="button" class="button" value="4" onclick="insert(4)">
+		<input type="button" class="button" value="5" onclick="insert(5)">
+		<input type="button" class="button" value="6" onclick="insert(6)">
+		<input type="button" class="button Rbutton"  id="minus" value="-" onclick="insert('-')">
+		<input type="button" class="button" value="1" onclick="insert(1)">
+		<input type="button" class="button" value="2" onclick="insert(2)">
+		<input type="button" class="button" value="3" onclick="insert(3)">
+		<input type="button" class="button Rbutton"  id="plus" value="+" onclick="insert('+')">
+		<input type="button" class="button" id="zero" value="0" onclick="insert(0)">
+		<input type="button" class="button" id="dot" value="." onclick="insert('.')">
+		<input type="button" class="button" id="del" value="del" onclick="back()">
+		<input type="button" class="button" id="equal" value="=" onclick="equal()">
+	</div>
+	<script type="text/javascript">
+		function insert(num){
+			document.form.textview.value=document.form.textview.value+num;
+		}
+		function equal(){
+			var exp=document.form.textview.value;
+			if(exp){
+				document.form.textview.value=eval(exp);
+			}
+		}
+		function erase(){
+			var exp=document.form.textview.value;
+			if(exp){
+				document.form.textview.value="";
+			}
+		}
+		function back(){
+			var exp=document.form.textview.value;
+			if(exp){
+				document.form.textview.value=exp.substring(0,exp.length-1);
+			}
+		}
+	</script>
+</body>
+</html>
